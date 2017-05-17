@@ -7,17 +7,9 @@ import java.util.List;
  */
 
 public class Comic {
-    private String id;
-    private String title;
-    private List<Image> images;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    String title;
+    List<Image> images;
 
     public String getTitle() {
         return title;
@@ -34,4 +26,5 @@ public class Comic {
     public void setImages(List<Image> images) {
         this.images = images;
     }
+
 }

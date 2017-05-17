@@ -10,11 +10,9 @@ import java.util.TimeZone;
  */
 
 public class MarvelApiRequestSignature {
-    public static String apiKey = "dd9484ba66538778ce6bb40b378c6d96";
-    public static String privateKey = "ba9c79cbe8374a635d322fc3558e0314241d54d9";
-
     public long timeStamp;
-    public String publicKey = apiKey;
+    public String publicKey = "dd9484ba66538778ce6bb40b378c6d96";
+    public String privateKey = "ba9c79cbe8374a635d322fc3558e0314241d54d9";
     public String hashSignature;
     private static Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
@@ -47,13 +45,5 @@ public class MarvelApiRequestSignature {
             e.printStackTrace();
         }
         return "";
-    }
-
-    /**
-     * Returnes a new instance of a request signature.
-     * @return
-     */
-    public static MarvelApiRequestSignature create(){
-        return  new MarvelApiRequestSignature();
     }
 }

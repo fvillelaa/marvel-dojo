@@ -1,12 +1,12 @@
 package android.abinbev.com.marveldojo.model;
 
 /**
- * Created by fvillela on 5/15/17.
+ * Created by fvillela on 5/16/17.
  */
 
 public class Image {
-    private String path;
-    private String extension;
+    String path;
+    String extension;
 
     public String getPath() {
         return path;
