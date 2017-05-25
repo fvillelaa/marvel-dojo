@@ -1,5 +1,11 @@
 package service;
 
+import android.abinbev.com.marveldojo.model.Comic;
+import android.abinbev.com.marveldojo.model.MarvelResultWrapper;
+
+import java.util.List;
+
+import listeners.APIResponseListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,16 +42,19 @@ public class MarvelApiImpl {
         return retrofit;
     }
 
-    public static <T> void executeRequest(final Call<T> baseCall) {
+    public static <T> void executeRequest(final Call<T> baseCall, final APIResponseListener apiResponseListener) {
         baseCall.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                System.out.println(response.body().toString());
+
+                MarvelResultWrapper body = (MarvelResultWrapper) response.body();
+                List<Comic> results = body.getData().getResults();
+                apiResponseListener.onSuccess(results);
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                System.out.println(t.getMessage().toString());
+                apiResponseListener.onError(t.getMessage().toString());
             }
         });
     }

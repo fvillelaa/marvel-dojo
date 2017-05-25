@@ -23,4 +23,8 @@ public class Image {
     public void setExtension(String extension) {
         this.extension = extension;
     }
+
+    public String getImageUrl() {
+        return path + "." + extension;
+    }
 }

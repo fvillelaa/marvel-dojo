@@ -13,7 +13,9 @@ import retrofit2.http.Query;
 public interface MarvelAPI {
 
     @GET("/v1/public/comics")
-    Call<MarvelResultWrapper> listComics(@Query("apikey") String apikey, @Query("ts") long ts, @Query("hash") String hash, @Query("limit") int limit); // users/myuser@ciandt.com/repos
-
+    Call<MarvelResultWrapper> listComics(@Query("apikey") String apikey,
+                                         @Query("ts") long ts,
+                                         @Query("hash") String hash,
+                                         @Query("limit") int limit); // users/myuser@ciandt.com/repos
 
 }
