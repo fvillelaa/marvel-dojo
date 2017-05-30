@@ -31,7 +31,7 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.comics.size();
     }
 
     @Override
@@ -39,9 +39,10 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
         return position;
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(this.context).inflate(R.layout.fragment_comic,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_comic,
                 parent, false);
         return new ViewHolder(v);
     }
@@ -51,12 +52,18 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
         Comic comic = comics.get(position);
 
         holder.comicTitle.setText(comic.getTitle());
-        Picasso.with(context).load(comic.getImages().get(0).getImageUrl()).into(holder.comicImage);
+
+        if (comic.getImages().size() > 0) {
+            Picasso.with(context).load(comic.getImages().get(0).getImageUrl()).into(holder.comicImage);
+        }
+        else {
+            Picasso.with(context).load(defaultImageUrl).into(holder.comicImage);
+        }
 
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView comicImage;
         TextView comicTitle;
@@ -67,15 +74,6 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
             //view.setId();
             comicImage = (ImageView) view.findViewById(R.id.comic_image);
             comicTitle = (TextView) view.findViewById(R.id.comic_title);
-
-
         }
-    }
-
-    public void updateList(List<Comic> list) {
-
-        comics = list;
-
-        notifyDataSetChanged();
     }
 }
