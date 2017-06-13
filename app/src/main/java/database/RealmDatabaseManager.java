@@ -1,5 +1,7 @@
 package database;
 
+import android.content.Context;
+
 import java.util.List;
 
 import io.realm.Realm;
@@ -15,15 +17,18 @@ public class RealmDatabaseManager {
     private RealmConfiguration realmConfiguration;
     private Realm realm;
 
-    public RealmDatabaseManager() {
-        this.realmConfiguration = new RealmConfiguration.Builder().build();
+    public RealmDatabaseManager(Context ctx) {
+        Realm.init(ctx);
+            this.realmConfiguration = new RealmConfiguration.Builder().build();
         this.realm = Realm.getInstance(this.realmConfiguration);
+
     }
 
     public void saveOrUpdate(final RealmObject realmObject, Realm.Transaction.OnSuccess onSuccess, Realm.Transaction.OnError onError) {
         this.realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
+
 
             }
         }, onSuccess, onError);
@@ -34,6 +39,8 @@ public class RealmDatabaseManager {
             @Override
             public void execute(Realm bgRealm) {
 
+                bgRealm.insertOrUpdate(realmObjects);
+                // bgRealm.commitTransaction();
             }
         }, onSuccess, onError);
     }
@@ -61,6 +68,8 @@ public class RealmDatabaseManager {
     }
 
     public RealmResults getAll(final Class realmClass) {
-        return null;
+
+        return this.realm.where(realmClass).findAll();
+
     }
 }

@@ -1,10 +1,12 @@
 package android.abinbev.com.marveldojo.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by fvillela on 5/16/17.
  */
 
-public class Image {
+public class Image extends RealmObject {
     String path;
     String extension;
 

@@ -2,14 +2,17 @@ package android.abinbev.com.marveldojo.model;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by fvillela on 5/15/17.
  */
 
-public class Comic {
+public class Comic extends RealmObject {
 
     String title;
-    List<Image> images;
+    RealmList<Image> images;
 
     public String getTitle() {
         return title;
@@ -23,7 +26,7 @@ public class Comic {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(RealmList<Image> images) {
         this.images = images;
     }
 

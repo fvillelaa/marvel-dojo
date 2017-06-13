@@ -12,11 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import adapter.ComicsListAdapter;
+import database.RealmDatabaseManager;
+import io.realm.Realm;
+import io.realm.RealmModel;
+import io.realm.RealmObject;
 import listeners.APIResponseListener;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -34,6 +39,7 @@ public class ComicsListFragment extends Fragment{
 
     private RecyclerView recyclerView;
     private ComicsListAdapter comicsListAdapter;
+    private RealmDatabaseManager realmDatabaseManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,11 +77,27 @@ public class ComicsListFragment extends Fragment{
             @Override
             public void onSuccess(List<Comic> comics) {
 
+                List comicList = comics;
+
                 comicsListAdapter = new ComicsListAdapter(getActivity(), comics);
                 recyclerView.setAdapter(comicsListAdapter);
 
                 comicsListAdapter.notifyDataSetChanged();
 
+                realmDatabaseManager = new RealmDatabaseManager(getActivity());
+
+                realmDatabaseManager.saveOrUpdateAll(comicList, new Realm.Transaction.OnSuccess() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getActivity(), "Deu certo, que show", Toast.LENGTH_SHORT).show();
+                        List comicsFromDatabase = realmDatabaseManager.getAll(Comic.class);
+                    }
+                }, new Realm.Transaction.OnError() {
+                    @Override
+                    public void onError(Throwable error) {
+                        Toast.makeText(getActivity(), "ERROR::: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
