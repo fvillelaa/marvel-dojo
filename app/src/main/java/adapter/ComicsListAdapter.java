@@ -3,7 +3,10 @@ package adapter;
 import android.abinbev.com.marveldojo.R;
 import android.abinbev.com.marveldojo.model.Comic;
 import android.content.Context;
+import android.content.Intent;
+import android.provider.SyncStateContract;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +17,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import activities.ComicActivity;
+import constants.Constants;
+
 /**
  * Created by fvillela on 5/15/17.
  */
 
-public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.ViewHolder> {
+public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.ViewHolder>{
 
     private String defaultImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6VT5fF0QLt1748mVMlM9RZUa8qMFkLe_6vB3H0MGqTujZl9hS";
     private final Context context;
@@ -48,8 +54,8 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Comic comic = comics.get(position);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Comic comic = comics.get(position);
 
         holder.comicTitle.setText(comic.getTitle());
 
@@ -60,8 +66,16 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
             Picasso.with(context).load(defaultImageUrl).into(holder.comicImage);
         }
 
-    }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ComicActivity.class);
+                intent.putExtra(Constants.intentExtraComicId, comic.getId());
 
+                context.startActivity(intent);
+            }
+        });
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -71,7 +85,6 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
         public ViewHolder(View view) {
             super(view);
 
-            //view.setId();
             comicImage = (ImageView) view.findViewById(R.id.comic_image);
             comicTitle = (TextView) view.findViewById(R.id.comic_title);
         }

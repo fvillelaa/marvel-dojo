@@ -10,7 +10,7 @@ import retrofit2.http.Query;
  * Created by fvillela on 5/16/17.
  */
 
-public interface MarvelAPI {
+public interface MarvelApi {
 
     @GET("/v1/public/comics")
     Call<MarvelResultWrapper> listComics(@Query("apikey") String apikey,

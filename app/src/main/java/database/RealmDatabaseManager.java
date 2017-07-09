@@ -40,7 +40,6 @@ public class RealmDatabaseManager {
             public void execute(Realm bgRealm) {
 
                 bgRealm.insertOrUpdate(realmObjects);
-                // bgRealm.commitTransaction();
             }
         }, onSuccess, onError);
     }
@@ -64,7 +63,8 @@ public class RealmDatabaseManager {
     }
 
     public RealmObject get(final Class realmClass, String fieldName, String value) {
-        return null;
+        return (RealmObject) this.realm.where(realmClass).equalTo(fieldName, value)
+                .findFirst();
     }
 
     public RealmResults getAll(final Class realmClass) {

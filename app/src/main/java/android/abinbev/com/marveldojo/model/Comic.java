@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by fvillela on 5/15/17.
@@ -11,6 +12,10 @@ import io.realm.RealmObject;
 
 public class Comic extends RealmObject {
 
+    public static String ID = "id";
+
+    @PrimaryKey
+    String id;
     String title;
     RealmList<Image> images;
 
@@ -30,4 +35,11 @@ public class Comic extends RealmObject {
         this.images = images;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -5,7 +5,6 @@ import android.abinbev.com.marveldojo.model.Comic;
 import android.abinbev.com.marveldojo.model.MarvelResultWrapper;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,22 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import adapter.ComicsListAdapter;
 import database.RealmDatabaseManager;
 import io.realm.Realm;
-import io.realm.RealmModel;
-import io.realm.RealmObject;
 import listeners.APIResponseListener;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import service.MarvelAPI;
+import service.MarvelApi;
 import service.MarvelApiImpl;
 import service.MarvelApiRequestSignature;
-
-import static android.abinbev.com.marveldojo.R.id.container;
 
 /**
  * Created by fvillela on 5/15/17.
@@ -64,7 +58,7 @@ public class ComicsListFragment extends Fragment{
 
         MarvelApiImpl.initMarvelApi();
         Retrofit retrofit = MarvelApiImpl.getRetrofit();
-        MarvelAPI marvelAPI = retrofit.create(MarvelAPI.class);
+        MarvelApi marvelAPI = retrofit.create(MarvelApi.class);
 
         MarvelApiRequestSignature marvelApiRequestSignature = new MarvelApiRequestSignature();
         Call<MarvelResultWrapper> marvelResultWrapperCall =
