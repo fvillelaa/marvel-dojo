@@ -65,7 +65,7 @@ public class ComicsListFragment extends Fragment{
                 marvelAPI.listComics(marvelApiRequestSignature.publicKey,
                         marvelApiRequestSignature.timeStamp,
                         marvelApiRequestSignature.hashSignature,
-                        10);
+                        20);
 
         MarvelApiImpl.executeRequest(marvelResultWrapperCall, new APIResponseListener() {
             @Override

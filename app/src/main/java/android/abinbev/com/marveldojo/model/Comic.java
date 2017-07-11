@@ -18,6 +18,9 @@ public class Comic extends RealmObject {
     String id;
     String title;
     RealmList<Image> images;
+    String format;
+    int pageCount;
+    String description;
 
     public String getTitle() {
         return title;
@@ -41,5 +44,37 @@ public class Comic extends RealmObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public static String getID() {
+        return ID;
+    }
+
+    public static void setID(String ID) {
+        Comic.ID = ID;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
