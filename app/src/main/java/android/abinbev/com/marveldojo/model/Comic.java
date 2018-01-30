@@ -1,23 +1,31 @@
 package android.abinbev.com.marveldojo.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import database.ImageTypeConverter;
 
 /**
  * Created by fvillela on 5/15/17.
  */
 
-public class Comic extends RealmObject {
+@Entity
+public class Comic {
 
     public static String ID = "id";
 
-    @PrimaryKey
+    @PrimaryKey @NonNull
     String id;
     String title;
-    RealmList<Image> images;
+    @TypeConverters(ImageTypeConverter.class)
+    List<Image> images;
     String format;
     int pageCount;
     String description;
@@ -34,7 +42,7 @@ public class Comic extends RealmObject {
         return images;
     }
 
-    public void setImages(RealmList<Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 

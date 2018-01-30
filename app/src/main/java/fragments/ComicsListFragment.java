@@ -4,20 +4,23 @@ import android.abinbev.com.marveldojo.R;
 import android.abinbev.com.marveldojo.model.Comic;
 import android.abinbev.com.marveldojo.model.MarvelResultWrapper;
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
 import adapter.ComicsListAdapter;
-import database.RealmDatabaseManager;
-import io.realm.Realm;
+import application.MarvelApplication;
+import database.dao.ComicDao;
 import listeners.APIResponseListener;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -33,19 +36,34 @@ public class ComicsListFragment extends Fragment{
 
     private RecyclerView recyclerView;
     private ComicsListAdapter comicsListAdapter;
-    private RealmDatabaseManager realmDatabaseManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ComicDao comicDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_comic_list, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.comics_list_recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
+
+        comicDao = MarvelApplication.getAppDatabase().comicDao();
 
         setupRecyclerView();
 
-        getHeroes();
+        setupSwipeRefresh();
+
+        getHeroesFromApi();
 
         return rootView;
+    }
+
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHeroesFromApi();
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -54,7 +72,21 @@ public class ComicsListFragment extends Fragment{
         recyclerView.setLayoutManager(mLayoutManager);
     }
 
-    private void getHeroes(){
+    private void populateRecyclerView(List<Comic> comics) {
+        comicsListAdapter = new ComicsListAdapter(getActivity(), comics);
+        recyclerView.setAdapter(comicsListAdapter);
+
+        comicsListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        populateRecyclerView(comicDao.getAll());
+    }
+
+    private void getHeroesFromApi(){
 
         MarvelApiImpl.initMarvelApi();
         Retrofit retrofit = MarvelApiImpl.getRetrofit();
@@ -71,34 +103,20 @@ public class ComicsListFragment extends Fragment{
             @Override
             public void onSuccess(List<Comic> comics) {
 
-                List comicList = comics;
+                populateRecyclerView(comics);
 
-                comicsListAdapter = new ComicsListAdapter(getActivity(), comics);
-                recyclerView.setAdapter(comicsListAdapter);
+                MarvelApplication.getAppDatabase().comicDao().saveAll(comics);
 
-                comicsListAdapter.notifyDataSetChanged();
-
-                realmDatabaseManager = new RealmDatabaseManager(getActivity());
-
-                realmDatabaseManager.saveOrUpdateAll(comicList, new Realm.Transaction.OnSuccess() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getActivity(), "Deu certo, que show", Toast.LENGTH_SHORT).show();
-                        List comicsFromDatabase = realmDatabaseManager.getAll(Comic.class);
-                    }
-                }, new Realm.Transaction.OnError() {
-                    @Override
-                    public void onError(Throwable error) {
-                        Toast.makeText(getActivity(), "ERROR::: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onError(String s) {
                 Log.d("ComicsList error", s);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        swipeRefreshLayout.setRefreshing(true);
     }
 }

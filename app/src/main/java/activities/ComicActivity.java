@@ -2,43 +2,48 @@ package activities;
 
 import android.abinbev.com.marveldojo.R;
 import android.abinbev.com.marveldojo.model.Comic;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import constants.Constants;
-import database.RealmDatabaseManager;
+import java.util.Locale;
 
-public class ComicActivity extends AppCompatActivity {
+import application.MarvelApplication;
+import constants.Constants;
+import database.dao.ComicDao;
+
+public class ComicActivity extends Activity {
 
     private ImageView imageViewComic;
     private TextView textViewID;
-    private TextView textViewFormat;
     private TextView textViewPages;
     private TextView textViewTitle;
-    private TextView textViewDescription;
+    private Button buttonDelete;
+
+    private ComicDao comicDao;
+
+    public ComicActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comic);
 
+        comicDao = MarvelApplication.getAppDatabase().comicDao();
+
         this.setupViews();
 
-        RealmDatabaseManager realmDatabaseManager = new RealmDatabaseManager(this);
-
         Intent intent = this.getIntent();
-        String comicId = intent.getStringExtra(Constants.intentExtraComicId);
+        final String comicId = intent.getStringExtra(Constants.intentExtraComicId);
 
-
-        Comic comic = (Comic) realmDatabaseManager.get(Comic.class, Comic.ID, comicId);
-        Log.d("comicID", comic.getId());
-        Log.d("title", comic.getTitle());
+        final Comic comic = comicDao.get(comicId);
 
         if (comic.getImages().size() > 0) {
             Picasso.with(this).load(comic.getImages().get(0).getImageUrl()).into(imageViewComic);
@@ -48,7 +53,15 @@ public class ComicActivity extends AppCompatActivity {
 
         textViewTitle.setText(comic.getTitle());
         textViewID.setText(comic.getId());
-        textViewPages.setText("Total de páginas: " + comic.getPageCount());
+        textViewPages.setText(String.format(Locale.getDefault(), "Total de páginas: %d", comic.getPageCount()));
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                comicDao.delete(comic);
+                finish();
+            }
+        });
     }
 
     private void setupViews() {
@@ -56,5 +69,6 @@ public class ComicActivity extends AppCompatActivity {
         this.textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         this.textViewID = (TextView) findViewById(R.id.textViewId);
         this.textViewPages = (TextView) findViewById(R.id.textViewPage);
+        this.buttonDelete = (Button) findViewById(R.id.buttonDelete);
     }
 }

@@ -1,12 +1,20 @@
 package android.abinbev.com.marveldojo.model;
 
-import io.realm.RealmObject;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
+
+import database.ImageTypeConverter;
 
 /**
  * Created by fvillela on 5/16/17.
  */
 
-public class Image extends RealmObject {
+
+
+public class Image {
+
     String path;
     String extension;
 

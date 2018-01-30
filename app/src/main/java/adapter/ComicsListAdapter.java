@@ -58,8 +58,7 @@ public class ComicsListAdapter extends RecyclerView.Adapter<ComicsListAdapter.Vi
 
         if (comic.getImages().size() > 0) {
             Picasso.with(context).load(comic.getImages().get(0).getImageUrl()).into(holder.comicImage);
-        }
-        else {
+        } else {
             Picasso.with(context).load(Constants.defaultImageUrl).into(holder.comicImage);
         }
 
